@@ -142,38 +142,58 @@ Errors:
 
 - consider that for the first phase of the implementation we can use Mocks.
 
-1. **Define Endpoints in Controllers**:
-   - Create REST controllers for Users, Cards, and Decks.
-   - Annotate with proper Spring MVC annotations (e.g., `@RestController`, `@RequestMapping`).
+1. **Define Entity Models**:
+   - Create JPA entities for Users, Decks, and Deck_Cards.
+   - Define relationships, constraints, and indexes.
+   - Add JPA annotations for mapping to database tables.
 
-2. **Implement DTO/Command Model Converters**:
+2. **Create DTOs and Command Models**:
+   - Define Data Transfer Objects for API responses.
+   - Create Command Models for handling incoming requests.
+   - Add validation annotations for request validation.
+
+3. **Implement DTO/Command Model Converters**:
    - Create mappers (using MapStruct or manual converters) to map between Command Models, DTOs, and entity objects.
-
-3. **Create Service Layer Logic**:
-   - Implement services for handling business logic (e.g., deck creation, card validation, deck statistics computation).
-   - Apply validations such as the deck minimum size and card copy limits.
 
 4. **Set Up Repository Layer**:
    - Use Spring Data JPA repositories to manage persistence for Users, Decks, and Deck_Cards.
+   - Define custom query methods if needed.
 
-5. **Integrate with External Card API**:
+5. **Create Service Layer Logic**:
+   - Implement services for handling business logic (e.g., deck creation, card validation, deck statistics computation).
+   - Apply validations such as the deck minimum size and card copy limits.
+
+6. **Integrate with External Card API**:
    - Implement a client (e.g., using RestTemplate or WebClient) to fetch card data from the Magic: The Gathering API.
+   - Add caching mechanism for frequently accessed card data.
 
-6. **Input Validation & Exception Handling**:
+7. **Define Endpoints in Controllers**:
+   - Create REST controllers for Users, Cards, and Decks.
+   - Annotate with proper Spring MVC annotations (e.g., `@RestController`, `@RequestMapping`).
+   - Implement endpoint methods using the service layer.
+
+8. **Input Validation & Exception Handling**:
    - Use Spring's validation framework with `@Valid` and exception handlers (e.g., `@ControllerAdvice`) to catch and format errors.
+   - Create custom exceptions and error responses.
 
-7. **Logging & Monitoring**:
-   - Setup logging (e.g., using SLF4J with Logback) and, if needed, create a dedicated error logging mechanism.
+9. **Testing & Documentation**:
+    - Write unit tests for entities, DTOs, and mappers.
+    - Create integration tests for repositories and services.
+    - Write end-to-end tests for controllers.
+    - Document endpoints using Swagger/OpenAPI.
 
-8. **Testing & Documentation**:
-   - Write integration and unit tests for the controllers and service layers.
-   - Document endpoints using Swagger/OpenAPI.
+10. **Logging & Monitoring**:
+    - Setup logging (e.g., using SLF4J with Logback) and, if needed, create a dedicated error logging mechanism.
+    - Add performance monitoring points.
 
-9. **Configure Authentication**:
+11. **Configure Application Properties**:
+    - Create application.properties/yml with database configurations.
+    - Set up external API configurations.
+    - Configure server properties.
+
+12. **Configure Authentication**:
     - Integrate Amazon Cognito with Spring Security.
     - Establish JWT filter to validate tokens and populate user context.
-
-10. **Configure Application Properties**:
     - Create application.properties/yml with database and security configurations:
       ```properties
       # Database Configuration
