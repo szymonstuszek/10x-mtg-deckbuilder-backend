@@ -6,7 +6,6 @@ import devs10x.mtg.devs10x_mtg_deckbuilder.dto.UpdateDeckDto;
 import devs10x.mtg.devs10x_mtg_deckbuilder.dto.DeckDetailsDto;
 import devs10x.mtg.devs10x_mtg_deckbuilder.dto.DeckStatisticsDto;
 import devs10x.mtg.devs10x_mtg_deckbuilder.dto.RandomCardResponseDto;
-import devs10x.mtg.devs10x_mtg_deckbuilder.dto.CardDto;
 import devs10x.mtg.devs10x_mtg_deckbuilder.service.DeckService;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
