@@ -18,5 +18,5 @@ public class Card {
     private String apiId;
     private String name;
     private String manaCost;
-    private Double cmc;
+    private Integer cmc;
 } 

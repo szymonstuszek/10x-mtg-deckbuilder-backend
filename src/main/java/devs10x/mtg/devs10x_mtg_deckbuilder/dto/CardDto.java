@@ -9,7 +9,7 @@ public class CardDto {
     private String apiId;
     private String name;
     private String manaCost;
-    private Double cmc;
+    private Integer cmc;
     private List<String> colors;
     private List<String> colorIdentity;
     private String type;
