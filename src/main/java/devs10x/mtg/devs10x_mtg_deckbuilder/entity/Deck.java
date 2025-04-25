@@ -9,6 +9,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import java.util.List;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+import devs10x.mtg.devs10x_mtg_deckbuilder.entity.DeckCard;
+import devs10x.mtg.devs10x_mtg_deckbuilder.entity.Card;
 
 @Data
 @Entity
@@ -27,4 +33,14 @@ public class Deck {
     @ManyToOne
     @JoinColumn(name = "user_sub")
     private User user;
+    
+    @OneToMany(mappedBy = "deck")
+    private List<DeckCard> deckCards;
+
+    public List<Card> getCards() {
+        if (deckCards == null) {
+            return new ArrayList<>();
+        }
+        return deckCards.stream().map(DeckCard::getCard).collect(Collectors.toList());
+    }
 } 

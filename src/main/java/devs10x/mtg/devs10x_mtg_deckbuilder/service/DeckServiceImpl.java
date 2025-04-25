@@ -45,6 +45,16 @@ public class DeckServiceImpl implements DeckService {
         return dto;
     }
 
+    private CardDto convertCardToDto(Card card) {
+        CardDto cardDto = new CardDto();
+        cardDto.setId(card.getId());
+        cardDto.setName(card.getName());
+        cardDto.setApiId(card.getApiId());
+        cardDto.setManaCost(card.getManaCost());
+        cardDto.setCmc(card.getCmc());
+        return cardDto;
+    }
+
     @Override
     public List<DeckDto> getDecks() {
         List<Deck> decks = deckRepository.findAll();
@@ -89,8 +99,9 @@ public class DeckServiceImpl implements DeckService {
         DeckDetailsDto details = new DeckDetailsDto();
         details.setDeckInfo(convertToDto(deck));
 
-        // For simplicity, setting cards and statistics as null
-        details.setCards(null);
+        details.setCards(deck.getDeckCards()
+            .stream()
+            .collect(Collectors.toMap(dc -> convertCardToDto(dc.getCard()), dc -> dc.getQuantity())));
         details.setStatistics(null);
         return details;
     }
