@@ -27,8 +27,6 @@ public class DeckController {
 
     private final DeckService deckService;
 
-    // autowired? 
-    @Autowired
     public DeckController(DeckService deckService) {
         this.deckService = deckService;
     }

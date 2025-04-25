@@ -7,125 +7,141 @@ import devs10x.mtg.devs10x_mtg_deckbuilder.dto.DeckDetailsDto;
 import devs10x.mtg.devs10x_mtg_deckbuilder.dto.DeckStatisticsDto;
 import devs10x.mtg.devs10x_mtg_deckbuilder.dto.RandomCardResponseDto;
 import devs10x.mtg.devs10x_mtg_deckbuilder.dto.CardDto;
+import devs10x.mtg.devs10x_mtg_deckbuilder.entity.Deck;
+import devs10x.mtg.devs10x_mtg_deckbuilder.entity.User;
+import devs10x.mtg.devs10x_mtg_deckbuilder.entity.Card;
+import devs10x.mtg.devs10x_mtg_deckbuilder.repository.DeckRepository;
+import devs10x.mtg.devs10x_mtg_deckbuilder.repository.UserRepository;
+import devs10x.mtg.devs10x_mtg_deckbuilder.repository.CardRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class DeckServiceImpl implements DeckService {
 
+    private final DeckRepository deckRepository;
+    private final UserRepository userRepository;
+    private final CardRepository cardRepository;
+
+    public DeckServiceImpl(DeckRepository deckRepository, UserRepository userRepository, CardRepository cardRepository) {
+        this.deckRepository = deckRepository;
+        this.userRepository = userRepository;
+        this.cardRepository = cardRepository;
+    }
+
+    private DeckDto convertToDto(Deck deck) {
+        DeckDto dto = new DeckDto();
+        dto.setId(deck.getId());
+        dto.setDeckName(deck.getDeckName());
+        dto.setDeckFormat(deck.getDeckFormat());
+        dto.setDeckDescription(deck.getDeckDescription());
+        dto.setCreatedAt(deck.getCreatedAt());
+        dto.setUpdatedAt(deck.getUpdatedAt());
+        return dto;
+    }
+
     @Override
     public List<DeckDto> getDecks() {
-        List<DeckDto> decks = new ArrayList<>();
-        DeckDto deck = new DeckDto();
-        deck.setId(1L);
-        deck.setDeckName("Sample Deck");
-        deck.setDeckFormat("Standard");
-        deck.setDeckDescription("A sample deck for demonstration");
-        deck.setCreatedAt(Instant.now());
-        deck.setUpdatedAt(Instant.now());
-        decks.add(deck);
-        return decks;
+        List<Deck> decks = deckRepository.findAll();
+        return decks.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
     @Override
     public DeckDto createDeck(CreateDeckDto createDeckDto) {
-        DeckDto deck = new DeckDto();
-        deck.setId(2L); // mock id
+        Deck deck = new Deck();
         deck.setDeckName(createDeckDto.getDeckName());
         deck.setDeckFormat(createDeckDto.getDeckFormat());
         deck.setDeckDescription(createDeckDto.getDeckDescription());
         deck.setCreatedAt(Instant.now());
         deck.setUpdatedAt(Instant.now());
-        return deck;
+
+        // Use a dummy user for demonstration
+        String dummyUserSub = "dummy";
+        Optional<User> userOpt = userRepository.findById(dummyUserSub);
+        User user;
+        if (userOpt.isPresent()) {
+            user = userOpt.get();
+        } else {
+            user = new User();
+            user.setSub(dummyUserSub);
+            user.setEmail("dummy@example.com");
+            user = userRepository.save(user);
+        }
+        deck.setUser(user);
+
+        deck = deckRepository.save(deck);
+        return convertToDto(deck);
     }
 
     @Override
     public DeckDetailsDto getDeckDetails(Long deckId) {
+        Optional<Deck> optionalDeck = deckRepository.findById(deckId);
+        if (!optionalDeck.isPresent()) {
+            return new DeckDetailsDto(); // Return an empty object instead of null
+        }
+        
+        Deck deck = optionalDeck.get();
         DeckDetailsDto details = new DeckDetailsDto();
+        details.setDeckInfo(convertToDto(deck));
 
-        DeckDto deck = new DeckDto();
-        deck.setId(deckId);
-        deck.setDeckName("Detailed Deck");
-        deck.setDeckFormat("Modern");
-        deck.setDeckDescription("Deck with detailed view");
-        deck.setCreatedAt(Instant.now());
-        deck.setUpdatedAt(Instant.now());
-        details.setDeckInfo(deck);
-
-        // Create a dummy card map (card -> quantity)
-        Map<CardDto, Integer> cards = new HashMap<>();
-        CardDto card = new CardDto();
-        card.setId(1L);
-        card.setName("Mock Card");
-        cards.put(card, 2);
-        details.setCards(cards);
-
-        // Create dummy deck statistics
-        DeckStatisticsDto statistics = new DeckStatisticsDto();
-        statistics.setTotalCards(2);
-        Map<String, Integer> types = new HashMap<>();
-        types.put("Creature", 2);
-        statistics.setTypes(types);
-        Map<String, Integer> manaCurve = new HashMap<>();
-        manaCurve.put("2", 1);
-        manaCurve.put("3", 1);
-        statistics.setManaCurve(manaCurve);
-        Map<String, Integer> colors = new HashMap<>();
-        colors.put("Blue", 1);
-        colors.put("Red", 1);
-        statistics.setColors(colors);
-        details.setStatistics(statistics);
-
+        // For simplicity, setting cards and statistics as null
+        details.setCards(null);
+        details.setStatistics(null);
         return details;
     }
 
     @Override
     public DeckDto updateDeck(Long deckId, UpdateDeckDto updateDeckDto) {
-        DeckDto deck = new DeckDto();
-        deck.setId(deckId);
+        Optional<Deck> optionalDeck = deckRepository.findById(deckId);
+        if (!optionalDeck.isPresent()) {
+            return new DeckDto(); // Return an empty object instead of null
+        }
+        Deck deck = optionalDeck.get();
         deck.setDeckName(updateDeckDto.getDeckName());
         deck.setDeckFormat(updateDeckDto.getDeckFormat());
         deck.setDeckDescription(updateDeckDto.getDeckDescription());
-        deck.setCreatedAt(Instant.now());
         deck.setUpdatedAt(Instant.now());
-        return deck;
+        deck = deckRepository.save(deck);
+        return convertToDto(deck);
     }
 
     @Override
     public void deleteDeck(Long deckId) {
-        // Mock delete: do nothing
+        deckRepository.deleteById(deckId);
     }
 
     @Override
     public DeckStatisticsDto getDeckStats(Long deckId) {
+        // For demonstration, return an empty statistics object
         DeckStatisticsDto stats = new DeckStatisticsDto();
-        stats.setTotalCards(2);
-        Map<String, Integer> types = new HashMap<>();
-        types.put("Creature", 2);
-        stats.setTypes(types);
-        Map<String, Integer> manaCurve = new HashMap<>();
-        manaCurve.put("2", 1);
-        manaCurve.put("3", 1);
-        stats.setManaCurve(manaCurve);
-        Map<String, Integer> colors = new HashMap<>();
-        colors.put("Blue", 1);
-        colors.put("Red", 1);
-        stats.setColors(colors);
+        stats.setTotalCards(0);
+        stats.setTypes(null);
+        stats.setManaCurve(null);
+        stats.setColors(null);
         return stats;
     }
 
     @Override
     public RandomCardResponseDto getRandomNonLandCard(Long deckId) {
+        List<Card> cards = cardRepository.findAll(); // In a real app, filter based on deck and type
         RandomCardResponseDto response = new RandomCardResponseDto();
-        CardDto card = new CardDto();
-        card.setId(1L);
-        card.setName("Random Non-Land Card");
-        response.setCard(card);
+        if (!cards.isEmpty()) {
+            Card card = cards.get(new Random().nextInt(cards.size()));
+            CardDto cardDto = new CardDto();
+            cardDto.setId(card.getId());
+            cardDto.setName(card.getName());
+            cardDto.setApiId(card.getApiId());
+            cardDto.setManaCost(card.getManaCost());
+            cardDto.setCmc(card.getCmc());
+            response.setCard(cardDto);
+        } else {
+            response.setCard(null);
+        }
         return response;
     }
 } 
