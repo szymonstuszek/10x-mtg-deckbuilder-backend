@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import jakarta.persistence.CascadeType;
 
 @Data
 @Entity
@@ -32,8 +33,8 @@ public class Deck {
     @JoinColumn(name = "user_sub")
     private User user;
     
-    @OneToMany(mappedBy = "deck")
-    private List<DeckCard> deckCards;
+    @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DeckCard> deckCards = new ArrayList<>();
 
     public List<Card> getCards() {
         if (deckCards == null) {
