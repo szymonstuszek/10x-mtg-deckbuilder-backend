@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import devs10x.mtg.devs10x_mtg_deckbuilder.dto.CardDto;
+import devs10x.mtg.devs10x_mtg_deckbuilder.dto.CardListResponseDto;
 
 import org.springframework.http.ResponseEntity;
 
@@ -38,16 +39,16 @@ public class CardController {
 
         List<CardDto> cards = Arrays.asList(card);
 
-        // Create mock pagination details
-        PaginationDto pagination = new PaginationDto();
-        pagination.setPage(page);
-        pagination.setPageSize(pageSize);
-        pagination.setTotalPages(10);
-        pagination.setTotalRecords(500);
+        // Commenting out PaginationDto usage; consider using Spring's Pageable or adjust based on @mtg-api needs
+        // PaginationDto pagination = new PaginationDto();
+        // pagination.setPage(page);
+        // pagination.setPageSize(pageSize);
+        // pagination.setTotalPages(10);
+        // pagination.setTotalRecords(500);
 
         CardListResponseDto response = new CardListResponseDto();
         response.setCards(cards);
-        response.setPagination(pagination);
+        // response.setPagination(pagination);
 
         return ResponseEntity.ok(response);
     }
