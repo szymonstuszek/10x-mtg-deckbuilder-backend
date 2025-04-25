@@ -50,7 +50,8 @@ public class DeckServiceImpl implements DeckService {
 
     private CardDto convertCardToDto(Card card) {
         CardDto cardDto = new CardDto();
-        cardDto.setId(card.getId());
+        // TODO review if we need to use Long or String for id, seems there is no apiId field
+        cardDto.setId(""+card.getId());
         cardDto.setName(card.getName());
         cardDto.setApiId(card.getApiId());
         cardDto.setManaCost(card.getManaCost());
@@ -179,8 +180,9 @@ public class DeckServiceImpl implements DeckService {
         RandomCardResponseDto response = new RandomCardResponseDto();
         if (!cards.isEmpty()) {
             Card card = cards.get(new Random().nextInt(cards.size()));
+            // TODO review if we need to use Long or String for id, seems there is no apiId field
             CardDto cardDto = new CardDto();
-            cardDto.setId(card.getId());
+            // cardDto.setId(card.getId());
             cardDto.setName(card.getName());
             cardDto.setApiId(card.getApiId());
             cardDto.setManaCost(card.getManaCost());
