@@ -1,0 +1,27 @@
+{
+    "deckName": "My Example Deck",
+    "description": "A sample deck created via the API with various card entries.",
+    "cards": [
+      {
+        "apiId": "external-id-1",
+        "name": "Lightning Bolt",
+        "quantity": 4,
+        "manaCost": "{R}",
+        "rarity": "Common"
+      },
+      {
+        "apiId": "external-id-2",
+        "name": "Counterspell",
+        "quantity": 3,
+        "manaCost": "{U}{U}",
+        "rarity": "Rare"
+      },
+      {
+        "apiId": "external-id-3",
+        "name": "Giant Growth",
+        "quantity": 2,
+        "manaCost": "{G}",
+        "rarity": "Uncommon"
+      }
+    ]
+  }

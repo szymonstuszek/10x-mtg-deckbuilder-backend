@@ -11,6 +11,5 @@ public class CreateDeckDto {
     private String deckFormat;
     private String deckDescription;
     // Optional: initial cards map with quantities
-    @JsonDeserialize(keyUsing = CardDtoKeyDeserializer.class)
-    private Map<CardDto, Integer> cards;
+    private List<CardDto> cards;
 } 

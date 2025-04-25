@@ -86,16 +86,16 @@ public class DeckServiceImpl implements DeckService {
             user = userRepository.save(user);
         }
         deck.setUser(user);
-        
+
         // Persist deck to obtain an ID
         deck = deckRepository.save(deck);
-        
+
         if (createDeckDto.getCards() != null && !createDeckDto.getCards().isEmpty()) {
-            for (Map.Entry<CardDto, Integer> entry : createDeckDto.getCards().entrySet()) {
-                CardDto cardDto = entry.getKey();
-                Integer quantity = entry.getValue();
+            for (CardDto cardDto : createDeckDto.getCards()) {
                 Card card;
 
+                // review this logic
+                int quantity = (cardDto.getQuantity() != null) ? cardDto.getQuantity() : 1;
                 if (cardDto.getApiId() != null) {
                     Optional<Card> cardOpt = cardRepository.findByApiId(cardDto.getApiId());
                     if (cardOpt.isPresent()) {
@@ -108,25 +108,15 @@ public class DeckServiceImpl implements DeckService {
                         card.setCmc(cardDto.getCmc());
                         card = cardRepository.save(card);
                     }
-                } else {
-                    // If no API id provided, create new card
-                    card = new Card();
-                    card.setApiId(cardDto.getApiId());
-                    card.setName(cardDto.getName());
-                    card.setManaCost(cardDto.getManaCost());
-                    card.setCmc(cardDto.getCmc());
-                    card = cardRepository.save(card);
+
+                    DeckCard deckCard = new DeckCard();
+                    deckCard.setDeck(deck);
+                    deckCard.setCard(card);
+                    deckCard.setQuantity(quantity);
+                    deckCard.getId().setDeckId(deck.getId());
+                    deckCard.getId().setCardId(card.getId());
+                    deck.getDeckCards().add(deckCard);
                 }
-
-                DeckCard deckCard = new DeckCard();
-                deckCard.setDeck(deck);
-                deckCard.setCard(card);
-                deckCard.setQuantity(quantity);
-                deckCard.getId().setDeckId(deck.getId());
-                deckCard.getId().setCardId(card.getId());
-
-                // Add the deckCard to the existing persistent deckCards list
-                deck.getDeckCards().add(deckCard);
             }
             deck = deckRepository.save(deck);
         }

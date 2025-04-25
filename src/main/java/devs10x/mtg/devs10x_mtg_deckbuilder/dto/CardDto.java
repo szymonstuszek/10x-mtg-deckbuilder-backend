@@ -10,6 +10,7 @@ public class CardDto {
     private String name;
     private String manaCost;
     private Integer cmc;
+    private Integer quantity;
     private List<String> colors;
     private List<String> colorIdentity;
     private String type;
