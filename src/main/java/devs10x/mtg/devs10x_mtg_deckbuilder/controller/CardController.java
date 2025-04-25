@@ -4,10 +4,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import devs10x.mtg.devs10x_mtg_deckbuilder.dto.CardDto;
+
 import org.springframework.http.ResponseEntity;
-import com.example.mtgdeckbuilder.dto.CardDto;
-import com.example.mtgdeckbuilder.dto.CardListResponseDto;
-import com.example.mtgdeckbuilder.dto.PaginationDto;
+
 import java.util.Arrays;
 import java.util.List;
 

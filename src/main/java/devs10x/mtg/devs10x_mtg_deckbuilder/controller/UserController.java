@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
-import com.example.mtgdeckbuilder.dto.UserDto;
+import devs10x.mtg.devs10x_mtg_deckbuilder.dto.UserDto;
 
 @RestController
 @RequestMapping("/users")
