@@ -8,6 +8,7 @@ import devs10x.mtg.devs10x_mtg_deckbuilder.dto.DeckStatisticsDto;
 import devs10x.mtg.devs10x_mtg_deckbuilder.dto.RandomCardResponseDto;
 import devs10x.mtg.devs10x_mtg_deckbuilder.dto.CardDto;
 import devs10x.mtg.devs10x_mtg_deckbuilder.entity.Deck;
+import devs10x.mtg.devs10x_mtg_deckbuilder.entity.DeckCard;
 import devs10x.mtg.devs10x_mtg_deckbuilder.entity.User;
 import devs10x.mtg.devs10x_mtg_deckbuilder.entity.Card;
 import devs10x.mtg.devs10x_mtg_deckbuilder.repository.DeckRepository;
@@ -16,7 +17,9 @@ import devs10x.mtg.devs10x_mtg_deckbuilder.repository.CardRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -84,7 +87,40 @@ public class DeckServiceImpl implements DeckService {
         }
         deck.setUser(user);
 
-        deck = deckRepository.save(deck);
+        if (createDeckDto.getCards() != null && !createDeckDto.getCards().isEmpty()) {
+            List<DeckCard> deckCards = new ArrayList<>();
+            for (Map.Entry<CardDto, Integer> entry : createDeckDto.getCards().entrySet()) {
+                CardDto cardDto = entry.getKey();
+                Integer quantity = entry.getValue();
+                Card card;
+
+                if (cardDto.getApiId() != null) {
+                    Optional<Card> cardOpt = cardRepository.findByApiId(cardDto.getApiId());
+                    if (cardOpt.isPresent()) {
+                        card = cardOpt.get();
+                    } else {
+                        card = new Card();
+                        card.setApiId(cardDto.getApiId());
+                        card.setName(cardDto.getName());
+                        card.setManaCost(cardDto.getManaCost());
+                        card.setCmc(cardDto.getCmc());
+                        card = cardRepository.save(card);
+                    }
+
+                    DeckCard deckCard = new DeckCard();
+                    deckCard.setDeck(deck);
+                    deckCard.setCard(card);
+                    deckCard.setQuantity(quantity);
+                    deckCard.getId().setDeckId(deck.getId());
+                    deckCard.getId().setCardId(card.getId());
+                    deckCards.add(deckCard);
+                }
+            }
+            
+            deck.setDeckCards(deckCards);
+            deck = deckRepository.save(deck);
+        }
+
         return convertToDto(deck);
     }
 
