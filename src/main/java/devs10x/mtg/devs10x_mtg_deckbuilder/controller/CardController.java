@@ -1,55 +1,29 @@
 package devs10x.mtg.devs10x_mtg_deckbuilder.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import devs10x.mtg.devs10x_mtg_deckbuilder.dto.CardDto;
 import devs10x.mtg.devs10x_mtg_deckbuilder.dto.CardListResponseDto;
-
+import devs10x.mtg.devs10x_mtg_deckbuilder.service.MtgApiService;
 import org.springframework.http.ResponseEntity;
-
-import java.util.Arrays;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
 @RequestMapping("/cards")
 public class CardController {
 
+    private final MtgApiService mtgApiService;
+
+    public CardController(MtgApiService mtgApiService) {
+        this.mtgApiService = mtgApiService;
+    }
+
     @GetMapping("")
-    public ResponseEntity<CardListResponseDto> getCards(
-            @RequestParam(required = false) String set,
-            @RequestParam(required = false, defaultValue = "1") int page,
-            @RequestParam(required = false, defaultValue = "50") int pageSize,
-            @RequestParam(required = false) String sort,
-            @RequestParam(required = false) String order,
-            @RequestParam(required = false) String rarity,
-            @RequestParam(required = false) String mana_cost,
-            @RequestParam(required = false) String color,
-            @RequestParam(required = false) String type,
-            @RequestParam(required = false) String name
-    ) {
-        // Create a mock card
-        CardDto card = new CardDto();
-        card.setId(1L);
-        card.setApiId("external-id-1");
-        card.setName("Mock Card");
-        // More fields can be set as needed
-
-        List<CardDto> cards = Arrays.asList(card);
-
-        // Commenting out PaginationDto usage; consider using Spring's Pageable or adjust based on @mtg-api needs
-        // PaginationDto pagination = new PaginationDto();
-        // pagination.setPage(page);
-        // pagination.setPageSize(pageSize);
-        // pagination.setTotalPages(10);
-        // pagination.setTotalRecords(500);
-
-        CardListResponseDto response = new CardListResponseDto();
-        response.setCards(cards);
-        // response.setPagination(pagination);
-
+    public ResponseEntity<CardListResponseDto> getCards() {
+        // List<CardDto> cards = mtgApiService.fetchCards();
+        CardListResponseDto response =  mtgApiService.fetchCards();
+        // response.setCards(cards);
         return ResponseEntity.ok(response);
     }
-} 
+}

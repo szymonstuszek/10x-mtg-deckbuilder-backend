@@ -5,7 +5,9 @@ import java.util.List;
 
 @Data
 public class CardDto {
-    private Long id;
+
+    // TODO: review if we need to use Long or String for id - check with the entity
+    private String id;
     private String apiId;
     private String name;
     private String manaCost;
