@@ -13,8 +13,9 @@ import jakarta.persistence.Table;
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long internalId;
     
+    private String id;
     private String apiId;
     private String name;
     private String manaCost;
