@@ -57,6 +57,7 @@ public class DeckServiceImpl implements DeckService {
         cardDto.setApiId(card.getApiId());
         cardDto.setManaCost(card.getManaCost());
         cardDto.setCmc(card.getCmc());
+        cardDto.setQuantity(null); // Default to null, will be set when needed
         return cardDto;
     }
 
@@ -140,7 +141,12 @@ public class DeckServiceImpl implements DeckService {
 
         details.setCards(deck.getDeckCards()
             .stream()
-            .collect(Collectors.toMap(dc -> convertCardToDto(dc.getCard()), dc -> dc.getQuantity())));
+            .map(dc -> {
+                CardDto cardDto = convertCardToDto(dc.getCard());
+                cardDto.setQuantity(dc.getQuantity());
+                return cardDto;
+            })
+            .collect(Collectors.toList()));
         details.setStatistics(null);
         return details;
     }
