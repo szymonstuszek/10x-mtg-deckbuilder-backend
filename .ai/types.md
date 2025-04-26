@@ -8,7 +8,7 @@
  * Note: In a real application, you might use validation annotations (e.g., @NotNull, @Size) and mapping frameworks (e.g., MapStruct) for converting between entity and DTO/command types.
  */
 
-package com.example.mtgdeckbuilder.dto;
+package devs10x.mtg.devs10x_mtg_deckbuilder.dto;
 
 import java.time.Instant;
 import java.util.List;
@@ -32,11 +32,12 @@ public class UserDto {
 @Data
 public class CardDto {
     // DTO representing a Magic: The Gathering card (read-only data from external API or our DB)
-    private Long id; // internal id, if applicable
+    private String id; // internal id
     private String apiId; // external API id
     private String name;
     private String manaCost;
-    private Double cmc;
+    private Integer cmc; // Corrected type from Double to Integer
+    private Integer quantity; // Added quantity field
     private List<String> colors;
     private List<String> colorIdentity;
     private String type;
@@ -57,21 +58,13 @@ public class CardDto {
     private String originalType;
 }
 
-// 3. Pagination and Card List Response DTOs
-
-@Data
-public class PaginationDto {
-    private int page;
-    private int pageSize;
-    private int totalPages;
-    private long totalRecords;
-}
+// 3. Card List Response DTO
 
 @Data
 public class CardListResponseDto {
     // Response model for card listing endpoint (/cards)
     private List<CardDto> cards;
-    private PaginationDto pagination;
+    // private PaginationDto pagination; // Pagination removed/commented as per Java DTO
 }
 
 // 4. Deck DTOs
@@ -110,8 +103,8 @@ public class CreateDeckDto {
     private String deckName;
     private String deckFormat;
     private String deckDescription;
-    // Optional initial cards for the deck - each includes card details and quantity
-    private List<CardDto> cards;
+    // Optional initial cards for the deck
+    private List<CardDto> cards; // Type matches Java DTO
 }
 
 @Data
@@ -122,7 +115,7 @@ public class UpdateDeckDto {
     private String deckFormat;
     private String deckDescription;
     // Full list of deck cards to update (this replaces the current deck card list)
-    private List<CardDto> cards;
+    private List<CardDto> cards; // Type matches Java DTO
 }
 
 // 5. Random Card Response
