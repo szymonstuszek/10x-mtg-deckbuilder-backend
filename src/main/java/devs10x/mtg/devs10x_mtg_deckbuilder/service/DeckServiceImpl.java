@@ -43,8 +43,9 @@ public class DeckServiceImpl implements DeckService {
         dto.setDeckName(deck.getDeckName());
         dto.setDeckFormat(deck.getDeckFormat());
         dto.setDeckDescription(deck.getDeckDescription());
-        dto.setCreatedAt(deck.getCreatedAt());
-        dto.setUpdatedAt(deck.getUpdatedAt());
+        // TODO review
+        // dto.setCreatedAt(deck.getCreatedAt());
+        // dto.setUpdatedAt(deck.getUpdatedAt());
         return dto;
     }
 
@@ -98,12 +99,13 @@ public class DeckServiceImpl implements DeckService {
                 // review this logic
                 int quantity = (cardDto.getQuantity() != null) ? cardDto.getQuantity() : 1;
                 if (cardDto.getId() != null) {
-                    Optional<Card> cardOpt = cardRepository.findByApiId(cardDto.getApiId());
+                    Optional<Card> cardOpt = cardRepository.findById(cardDto.getId());
                     if (cardOpt.isPresent()) {
                         card = cardOpt.get();
                     } else {
                         card = new Card();
                         card.setApiId(cardDto.getApiId());
+                        card.setId(cardDto.getId());
                         card.setName(cardDto.getName());
                         card.setManaCost(cardDto.getManaCost());
                         card.setCmc(cardDto.getCmc());
@@ -115,7 +117,7 @@ public class DeckServiceImpl implements DeckService {
                     deckCard.setCard(card);
                     deckCard.setQuantity(quantity);
                     deckCard.getId().setDeckId(deck.getId());
-                    deckCard.getId().setCardId(card.getId());
+                    deckCard.getId().setCardId(card.getInternalId());
                     deck.getDeckCards().add(deckCard);
                 }
             }
