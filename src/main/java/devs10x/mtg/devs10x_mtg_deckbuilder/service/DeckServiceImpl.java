@@ -51,13 +51,30 @@ public class DeckServiceImpl implements DeckService {
 
     private CardDto convertCardToDto(Card card) {
         CardDto cardDto = new CardDto();
-        // TODO review if we need to use Long or String for id, seems there is no apiId field
-        cardDto.setId(""+card.getId());
-        cardDto.setName(card.getName());
+
+        cardDto.setId(""+card.getApiId());
         cardDto.setApiId(card.getApiId());
+        cardDto.setName(card.getName());
         cardDto.setManaCost(card.getManaCost());
         cardDto.setCmc(card.getCmc());
-        cardDto.setQuantity(null); // Default to null, will be set when needed
+        cardDto.setColors(card.getColors());
+        cardDto.setColorIdentity(card.getColorIdentity());
+        cardDto.setType(card.getType());
+        cardDto.setTypes(card.getTypes());
+        cardDto.setSubtypes(card.getSubtypes());
+        cardDto.setRarity(card.getRarity());
+        cardDto.setSet(card.getSet());
+        cardDto.setSetName(card.getSetName());
+        cardDto.setCardText(card.getCardText());
+        cardDto.setArtist(card.getArtist());
+        cardDto.setNumber(card.getNumber());
+        cardDto.setPower(card.getPower());
+        cardDto.setToughness(card.getToughness());
+        cardDto.setLayout(card.getLayout());
+        cardDto.setMultiverseid(card.getMultiverseid());
+        cardDto.setImageUrl(card.getImageUrl());
+        cardDto.setOriginalText(card.getOriginalText());
+        cardDto.setOriginalType(card.getOriginalType());
         return cardDto;
     }
 
@@ -100,16 +117,33 @@ public class DeckServiceImpl implements DeckService {
                 // review this logic
                 int quantity = (cardDto.getQuantity() != null) ? cardDto.getQuantity() : 1;
                 if (cardDto.getId() != null) {
-                    Optional<Card> cardOpt = cardRepository.findById(cardDto.getId());
+                    Optional<Card> cardOpt = cardRepository.findByApiId(cardDto.getApiId());
                     if (cardOpt.isPresent()) {
                         card = cardOpt.get();
                     } else {
                         card = new Card();
-                        card.setApiId(cardDto.getApiId());
-                        card.setId(cardDto.getId());
+                        card.setApiId(cardDto.getId());
                         card.setName(cardDto.getName());
                         card.setManaCost(cardDto.getManaCost());
                         card.setCmc(cardDto.getCmc());
+                        card.setColors(cardDto.getColors());
+                        card.setColorIdentity(cardDto.getColorIdentity());
+                        card.setType(cardDto.getType());
+                        card.setTypes(cardDto.getTypes());
+                        card.setSubtypes(cardDto.getSubtypes());
+                        card.setRarity(cardDto.getRarity());
+                        card.setSet(cardDto.getSet());
+                        card.setSetName(cardDto.getSetName());
+                        card.setCardText(cardDto.getCardText());
+                        card.setArtist(cardDto.getArtist());
+                        card.setNumber(cardDto.getNumber());
+                        card.setPower(cardDto.getPower());
+                        card.setToughness(cardDto.getToughness());
+                        card.setLayout(cardDto.getLayout());
+                        card.setMultiverseid(cardDto.getMultiverseid());
+                        card.setImageUrl(cardDto.getImageUrl());
+                        card.setOriginalText(cardDto.getOriginalText());
+                        card.setOriginalType(cardDto.getOriginalType());
                         card = cardRepository.save(card);
                     }
 
@@ -190,7 +224,6 @@ public class DeckServiceImpl implements DeckService {
             Card card = cards.get(new Random().nextInt(cards.size()));
             // TODO review if we need to use Long or String for id, seems there is no apiId field
             CardDto cardDto = new CardDto();
-            // cardDto.setId(card.getId());
             cardDto.setName(card.getName());
             cardDto.setApiId(card.getApiId());
             cardDto.setManaCost(card.getManaCost());
