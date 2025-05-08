@@ -218,19 +218,25 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     public RandomCardResponseDto getRandomNonLandCard(Long deckId) {
-        List<Card> cards = cardRepository.findAll(); // In a real app, filter based on deck and type
+        Optional<Deck> optionalDeck = deckRepository.findById(deckId);
         RandomCardResponseDto response = new RandomCardResponseDto();
-        if (!cards.isEmpty()) {
-            Card card = cards.get(new Random().nextInt(cards.size()));
-            // TODO review if we need to use Long or String for id, seems there is no apiId field
-            CardDto cardDto = new CardDto();
-            cardDto.setName(card.getName());
-            cardDto.setApiId(card.getApiId());
-            cardDto.setManaCost(card.getManaCost());
-            cardDto.setCmc(card.getCmc());
-            response.setCard(cardDto);
+
+        if (optionalDeck.isPresent()) {
+            Deck deck = optionalDeck.get();
+            List<Card> nonLandCards = deck.getDeckCards().stream()
+                    .map(DeckCard::getCard)
+                    .filter(card -> card.getTypes() != null && !card.getTypes().contains("Land"))
+                    .collect(Collectors.toList());
+
+            if (!nonLandCards.isEmpty()) {
+                Card selectedCard = nonLandCards.get(new Random().nextInt(nonLandCards.size()));
+                CardDto cardDto = convertCardToDto(selectedCard); // Use existing conversion method
+                response.setCard(cardDto);
+            } else {
+                response.setCard(null); // No non-land cards in the deck
+            }
         } else {
-            response.setCard(null);
+            response.setCard(null); // Deck not found
         }
         return response;
     }

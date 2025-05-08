@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 // allow all origins
@@ -27,6 +30,7 @@ import java.util.List;
 public class DeckController {
 
     private final DeckService deckService;
+    private static final Logger logger = LoggerFactory.getLogger(DeckController.class);
 
     public DeckController(DeckService deckService) {
         this.deckService = deckService;
@@ -77,6 +81,7 @@ public class DeckController {
 
     @GetMapping("/{deckId}/random")
     public ResponseEntity<RandomCardResponseDto> getRandomNonLandCard(@PathVariable Long deckId) {
+        logger.info("Fetching random non-land card for deck ID: {}", deckId);
         RandomCardResponseDto randomResponse = deckService.getRandomNonLandCard(deckId);
         return ResponseEntity.ok(randomResponse);
     }
