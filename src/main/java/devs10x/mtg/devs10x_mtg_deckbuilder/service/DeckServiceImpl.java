@@ -117,7 +117,7 @@ public class DeckServiceImpl implements DeckService {
                 // review this logic
                 int quantity = (cardDto.getQuantity() != null) ? cardDto.getQuantity() : 1;
                 if (cardDto.getId() != null) {
-                    Optional<Card> cardOpt = cardRepository.findByApiId(cardDto.getApiId());
+                    Optional<Card> cardOpt = cardRepository.findByApiId(cardDto.getId());
                     if (cardOpt.isPresent()) {
                         card = cardOpt.get();
                     } else {
