@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>devs10x.mtg</groupId>
 	<artifactId>devs10x-mtg-deckbuilder-backend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<packaging>jar</packaging>
 	<name>devs10x-mtg-deckbuilder</name>
 	<description>Mtg deckbuilder app</description>
