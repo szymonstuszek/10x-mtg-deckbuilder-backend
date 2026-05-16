@@ -19,21 +19,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
-            .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-            .authorizeHttpRequests(authorize -> authorize
-                // TODO setup toggle for disabling authentication
-                .anyRequest().permitAll()
-                // .anyRequest().authenticated()
-               
-            )
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}))
-            .build(); 
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                .authorizeHttpRequests(authorize -> authorize
+                        .anyRequest().permitAll()
+                )
+                .build();
     }
 
-
-    
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
